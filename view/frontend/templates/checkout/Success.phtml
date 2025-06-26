@@ -1,0 +1,375 @@
+<?php
+$data = $block->getRegistrationData();
+$isSuccess = $data && ($data['status_code'] === '0000' || strpos($data['status_code'], '200') === 0);
+$bankList = $block->getBankList();
+$convenienceStoreList = $block->getConvenienceStoreList();
+?>
+
+<div class="payment-registration-container">
+    <?php if ($isSuccess): ?>
+        <div class="payment-success">
+            <div class="payment-header">
+                <h4 class="payment-title success">Registration Success</h4>
+                <div class="payment-status-badge success">Success</div>
+            </div>
+
+            <div class="payment-details">
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value"><?= $block->escapeHtml($data['status'] ?? 'N/A') ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Amount:</span>
+                    <span class="detail-value"><?= $block->escapeHtml($data['amount'] ?? 'N/A') ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Order ID:</span>
+                    <span class="detail-value"><?= $block->escapeHtml($data['order_id'] ?? 'N/A') ?></span>
+                </div>
+
+                <!-- For VA -->
+                <?php if (isset($data['payment_method']) && $data['payment_method'] === '02'): ?>
+                    <div class="payment-method-details">
+                        <h5 class="method-title">Virtual Account Payment</h5>
+                        <div class="detail-row">
+                            <span class="detail-label">Virtual Account Number:</span>
+                            <span class="detail-value"><?= $block->escapeHtml($data['virtual_account_no'] ?? 'N/A') ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Bank:</span>
+                            <span class="detail-value">
+                                <?php if (isset($data['bank_code']) && isset($bankList[$data['bank_code']])): ?>
+                                    <?= $bankList[$data['bank_code']]['label'] ?>
+                                <?php else: ?>
+                                    <?= $block->escapeHtml($data['bank_code'] ?? 'N/A') ?>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+
+                        <?php if (isset($data['bank_code']) && isset($bankList[$data['bank_code']]) && !empty($bankList[$data['bank_code']]['content'])): ?>
+                            <div class="payment-instructions">
+                                <h5>How to Pay</h5>
+                                <?= /* @noEscape */ $bankList[$data['bank_code']]['content'] ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- For CVS -->
+                <?php elseif (isset($data['payment_method']) && $data['payment_method'] === '03'): ?>
+                    <div class="payment-method-details">
+                        <h5 class="method-title">Convenience Store Payment</h5>
+                        <div class="detail-row">
+                            <span class="detail-label">Pay Number:</span>
+                            <span class="detail-value"><?= $block->escapeHtml($data['cvs_pay_no'] ?? 'N/A') ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Mitra:</span>
+                            <span class="detail-value">
+                                <?php if (isset($data['mitra_code']) && isset($convenienceStoreList[$data['mitra_code']])): ?>
+                                    <?= $convenienceStoreList[$data['mitra_code']]['label'] ?>
+                                <?php else: ?>
+                                    <?= $block->escapeHtml($data['mitra_code'] ?? 'N/A') ?>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        <?php if (isset($data['mitra_code']) && isset($convenienceStoreList[$data['mitra_code']]) && !empty($convenienceStoreList[$data['mitra_code']]['content'])): ?>
+                            <div class="payment-instructions">
+                                <h5>How to Pay</h5>
+                                <?= /* @noEscape */ $convenienceStoreList[$data['mitra_code']]['content'] ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- For QR -->
+                <?php elseif (isset($data['payment_method']) && $data['payment_method'] === '08'): ?>
+                    <div class="payment-method-details">
+                        <h5 class="method-title">QRIS Payment</h5>
+                        <p class="qr-instruction">Scan the QR code below to complete your payment</p>
+                        <?php if (isset($data['qris_url'])): ?>
+                            <div class="qr-code-container">
+                                <img src="<?= $block->escapeHtml($data['qris_url']) ?>" alt="QR Code" class="qr-code">
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- For Ewallet -->
+                <?php elseif (isset($data['payment_method']) && $data['payment_method'] === '05'): ?>
+                    <div class="payment-method-details">
+                        <h5 class="method-title">E-Wallet Payment</h5>
+                        <p class="redirect-message">You will be redirected to <?= $block->escapeHtml($data['mitra_cd'] ?? 'N/A') ?></p>
+
+                        <?php if (isset($data['ewallet_payment_url'])): ?>
+                            <script type="text/javascript">
+                                if (confirm("You will be directed to the payment mitra. Click OK to continue.")) {
+                                    window.location.href = "<?= $block->escapeUrl($data['ewallet_payment_url']) ?>";
+                                }
+                            </script>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- For PAYOUT -->
+                <?php elseif (isset($data['payment_method']) && $data['payment_method'] === '07'): ?>
+                    <div class="payment-method-details">
+                        <h5 class="method-title">Payout Details</h5>
+                        <div class="detail-row">
+                            <span class="detail-label">Account Name:</span>
+                            <span class="detail-value"><?= $block->escapeHtml($data['beneficiary_name'] ?? 'N/A') ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Account Number:</span>
+                            <span class="detail-value"><?= $block->escapeHtml($data['beneficiary_account_no'] ?? 'N/A') ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Bank:</span>
+                            <span class="detail-value">
+                                <?php if (isset($data['bank_code']) && isset($bankList[$data['bank_code']])): ?>
+                                    <?= $bankList[$data['bank_code']]['label'] ?>
+                                <?php else: ?>
+                                    <?= $block->escapeHtml($data['bank_code'] ?? 'N/A') ?>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payout Method:</span>
+                            <span class="detail-value"><?= $block->escapeHtml($data['payout_method'] ?? 'N/A') ?></span>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($data['paymentExp'])): ?>
+                    <div class="payment-expiry">
+                        <p class="expiry-notice"><strong>Complete Your Payment Before:</strong> <?= $block->escapeHtml($data['paymentExp']) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    <?php elseif ($data): ?>
+        <div class="payment-failed">
+            <div class="payment-header">
+                <h4 class="payment-title error">Registration Failed</h4>
+                <div class="payment-status-badge error">Error</div>
+            </div>
+
+            <div class="error-message">
+                <p>Registration transaction failed. Please contact our customer service.</p>
+            </div>
+
+            <div class="error-details">
+                <?php if (isset($data['status_code'])): ?>
+                    <div class="detail-row">
+                        <span class="detail-label">Status Code:</span>
+                        <span class="detail-value"><?= $block->escapeHtml($data['status_code']) ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (isset($data['status'])): ?>
+                    <div class="detail-row">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value"><?= $block->escapeHtml($data['status']) ?></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    <?php else: ?>
+        <div class="no-data">
+            <p class="no-data-message">No registration data found.</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+    /* Style the existing page title */
+    .page-title-wrapper {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        color: #2e7d32;
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0 0 15px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .page-title .base {
+        display: inline-block;
+    }
+
+    .page-title:after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: #2e7d32;
+        margin: 10px auto 0;
+    }
+
+    /* For error state */
+    .message.error~.page-title-wrapper .page-title {
+        color: #c62828;
+    }
+
+    .message.error~.page-title-wrapper .page-title:after {
+        background: #c62828;
+    }
+
+    /* Style the payment registration container */
+    .payment-registration-container {
+        font-family: 'Arial', sans-serif;
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .payment-title {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .payment-title.success {
+        color: #2e7d32;
+    }
+
+    .payment-title.error {
+        color: #c62828;
+    }
+
+    .payment-status-badge {
+        margin-left: 15px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+
+    .payment-status-badge.success {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .payment-status-badge.error {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    .payment-details,
+    .error-details {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+    }
+
+    .payment-method-details {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f0f4f8;
+        border-radius: 6px;
+        border-left: 4px solid #3f51b5;
+    }
+
+    .method-title {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #3f51b5;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        min-width: 180px;
+        color: #555;
+    }
+
+    .detail-value {
+        color: #333;
+    }
+
+    .qr-code-container {
+        text-align: center;
+        margin: 15px 0;
+    }
+
+    .qr-code {
+        max-width: 200px;
+        height: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: white;
+    }
+
+    .qr-instruction,
+    .redirect-message {
+        font-size: 1.1rem;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .payment-expiry {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #fff8e1;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .expiry-notice {
+        margin: 0;
+        color: #ff8f00;
+        font-weight: bold;
+    }
+
+    .error-message {
+        color: #c62828;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+
+    .no-data-message {
+        font-size: 1.1rem;
+    }
+
+    /* Payment instructions styling */
+    .payment-instructions {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        border-left: 3px solid #3f51b5;
+    }
+
+    .payment-instructions h5 {
+        margin-top: 0;
+        color: #3f51b5;
+    }
+
+    .payment-instructions ol,
+    .payment-instructions ul {
+        padding-left: 20px;
+    }
+
+    .payment-instructions li {
+        margin-bottom: 8px;
+    }
+</style>

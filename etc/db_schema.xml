@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!--
+  ~ Copyright © Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="sales_order">
+        <column name="nicepay_txid" xsi:type="varchar" length="30" nullable="true" comment="Nicepay Transaction Id"/>
+        <column name="nicepay_payment_method" xsi:type="varchar" length="2" nullable="true" comment="Nicepay Payment Method"/>
+        <column name="nicepay_payment_status" xsi:type="varchar" length="2" nullable="true" comment="Nicepay Payment Status"/>
+        <column name="nicepay_beneficiary_account_no" xsi:type="varchar" length="20" nullable="true" comment="Beneficiary Account No for Payout Transaction"/>
+
+        <index referenceId="SALES_ORDER_NICEPAY_TXID" indexType="btree">
+            <column name="nicepay_txid"/>
+        </index>
+        <index referenceId="SALES_ORDER_NICEPAY_PAYMENT_METHOD" indexType="btree">
+            <column name="nicepay_payment_method"/>
+        </index>
+        <index referenceId="SALES_ORDER_NICEPAY_PAYMENT_STATUS" indexType="btree">
+            <column name="nicepay_payment_status"/>
+        </index>
+        <index referenceId="SALES_ORDER_NICEPAY_BENEFICIARY_ACCOUNT_NO" indexType="btree">
+            <column name="nicepay_beneficiary_account_no"/>
+        </index>
+    </table>
+</schema>

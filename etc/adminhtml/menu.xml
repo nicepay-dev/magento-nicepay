@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+   <menu>
+       <add id="Nicepay_NicePayment::menu"
+           title="Nicepay Menu" module="Nicepay_NicePayment"
+           sortOrder="10"
+           resource="Magento_Backend::content"
+           />
+
+        <!-- START: new node -->  
+       <add id="Nicepay_NicePayment::menu_payout_trans"
+           title="Payout Transaction" module="Nicepay_NicePayment"
+           sortOrder="10" parent="Nicepay_NicePayment::menu"
+           action="nicepay/payout/index"
+           resource="Nicepay_NicePayment::menu_payout_trans"
+           />
+       <!-- END:   new node -->
+   </menu>
+</config>

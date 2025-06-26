@@ -1,0 +1,195 @@
+<div
+    class="payment-method"
+    data-bind="css: {'_active': (getCode() == isChecked())}"
+>
+    <div class="payment-method-title field choice">
+        <input
+            type="radio"
+            name="payment[method]"
+            class="radio"
+            data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"
+        />
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+    <div class="payment-method-content">
+        <div
+            class="payment-method-note"
+            data-bind="text: getDescription()"
+        ></div>
+
+        <!-- ko if: getCode() == 'card' -->
+        <div class="card-details">
+            <div class="form-group">
+                <label>Card Number:</label>
+                <input
+                    type="text"
+                    data-bind="value: cardNo"
+                    placeholder="Enter card number"
+                />
+            </div>
+
+            <div class="form-group">
+                <label>Expiration Date (YYMM):</label>
+                <input
+                    type="text"
+                    data-bind="value: cardExpYymm"
+                    placeholder="YYMM"
+                    maxlength="4"
+                />
+            </div>
+
+            <div class="form-group">
+                <label>CVV:</label>
+                <input
+                    type="password"
+                    data-bind="value: cardCvv"
+                    placeholder="CVV"
+                    maxlength="4"
+                />
+            </div>
+
+            <div class="form-group">
+                <label>Cardholder Name:</label>
+                <input
+                    type="text"
+                    data-bind="value: cardHolderNm"
+                    placeholder="Name on card"
+                />
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: getCode() == 'virtual_account' -->
+        <div class="bank-selector">
+            <p><strong>Select Bank:</strong></p>
+            <!-- ko foreach: Object.keys(additionalInfo) -->
+            <label>
+                <input
+                    type="radio"
+                    name="bankCd"
+                    data-bind="attr: {value: $data}, checked: $parent.selectedBank"
+                />
+                <span
+                    data-bind="text: $parent.additionalInfo[$data].label"
+                ></span>
+            </label>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: getCode() == 'cvs' -->
+        <div class="cvs-selector">
+            <p><strong>Select Convenience Store:</strong></p>
+            <!-- ko foreach: Object.keys(additionalInfo) -->
+            <label>
+                <input
+                    type="radio"
+                    name="mitraCd"
+                    data-bind="attr: {value: $data}, checked: $parent.selectedMitra"
+                />
+                <span
+                    data-bind="text: $parent.additionalInfo[$data].label"
+                ></span>
+            </label>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: getCode() == 'ewallet' -->
+        <div class="ewallet-selector">
+            <p><strong>Ewallet Account Number:</strong></p>
+            <label>
+                <input type="text" name="phoneNo" data-bind="value: phoneNo" />
+            </label>
+
+            <p><strong>Select Ewallet:</strong></p>
+            <!-- ko foreach: Object.keys(additionalInfo) -->
+            <label>
+                <input
+                    type="radio"
+                    name="mitraCd"
+                    data-bind="attr: {value: $data}, checked: $parent.selectedMitra"
+                />
+                <span
+                    data-bind="text: $parent.additionalInfo[$data].label"
+                ></span>
+            </label>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: getCode() == 'payloan' -->
+        <div class="payloan-selector">
+            <p><strong>Select Mitra Loan:</strong></p>
+            <!-- ko foreach: Object.keys(additionalInfo) -->
+            <label>
+                <input
+                    type="radio"
+                    name="mitraCd"
+                    data-bind="attr: {value: $data}, checked: $parent.selectedMitra"
+                />
+                <span
+                    data-bind="text: $parent.additionalInfo[$data].label"
+                ></span>
+            </label>
+            <!-- /ko -->
+        </div>
+        <!-- /ko -->
+
+        <!-- ko if: getCode() == 'payout' -->
+        <div class="payout-data">
+            <div class="form-group">
+                <label for="accountNo"><strong>Account Number:</strong></label>
+                <input
+                    type="text"
+                    id="accountNo"
+                    name="accountNo"
+                    data-bind="value: accountNo ,
+      optionsCaption: 'Enter your account number here'"
+                />
+            </div>
+        </div>
+
+        <div class="payout-bank-selector">
+            <p><strong>Select Account / Bank :</strong></p>
+            <select
+                data-bind="
+      options: Object.keys(additionalInfo),
+      optionsText: function(key) { return additionalInfo[key].label; },
+      value: selectedBank,
+      optionsCaption: 'Select a bank...'
+    "
+            ></select>
+        </div>
+        <!-- /ko -->
+
+        <div
+            data-bind="
+         style: {color: 'red'}
+         "
+        >
+            <span
+                data-bind="text: getTestDescription().prefix, style: { 'font-weight': 'bold' }"
+            ></span>
+            <span data-bind="text: getTestDescription().content"></span>
+        </div>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button
+                    class="action primary checkout"
+                    type="submit"
+                    data-bind="
+          click: placeOrder,
+          attr: {title: $t('Place Order')},
+          enable: isPlaceOrderActionAllowed() && getCode() == isChecked(),
+          css: {disabled: !(isPlaceOrderActionAllowed() && getCode() == isChecked())}
+        "
+                >
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

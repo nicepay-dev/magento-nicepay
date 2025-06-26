@@ -1,0 +1,740 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="nicepay" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Nicepay</label>
+                <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="debug" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Debug mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <group id="other_configurations" translate="label" sortOrder="92" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Method Configurations</label>
+                    
+                    <!-- VIRTUAL ACCOUNT -->
+                    <group id="virtual_account" translate="label" sortOrder="92" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Virtual Accounts</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/virtual_account/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/virtual_account/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/virtual_account/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/virtual_account/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/virtual_account/nicepay_env</config_path>
+                        </field>
+                        <field id="nicepay_api_version" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>NICEPay API Version</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\ApiVersionRadioBtn</source_model>
+                            <comment>
+                                Choose Nicepay APi Version registered for your iMid
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/virtual_account/nicepay_api_version</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/virtual_account/merchant_key</config_path>
+                        </field>
+                        <field id="private_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Private Key</label>
+                            <comment>
+                                Merchant Generated Private Key Pair (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/virtual_account/private_key</config_path>
+                        </field>
+                        <field id="public_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Public Key</label>
+                            <comment>
+                                Nicepay Public Key (SNAP Notification)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/virtual_account/public_key</config_path>
+                        </field>
+                        <field id="client_secret" translate="label" type="obscure" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Client Secret</label>
+                            <comment>
+                                Merchant Client Secret (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/virtual_account/client_secret</config_path>
+                        </field>
+                        <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/virtual_account/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/virtual_account/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/virtual_account/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/virtual_account/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- QRIS -->
+                    <group id="qris" translate="label" sortOrder="92" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>QRIS</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/qris/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/qris/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/qris/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/qris/merchant_id</config_path>
+                        </field>
+                         <field id="store_id" translate="label" type="textarea" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Store ID</label>
+                            <config_path>payment/qris/store_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/qris/nicepay_env</config_path>
+                        </field>
+                        <field id="mitra_cd" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Qris Provider</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\QrisMitraCdRadioBtn</source_model>
+                            <comment>
+                                Choose Qris Provider
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/qris/mitra_cd</config_path>
+                        </field>
+                        <field id="nicepay_api_version" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>NICEPay API Version</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\ApiVersionRadioBtn</source_model>
+                            <comment>
+                                Choose Nicepay APi Version registered for your iMid
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/qris/nicepay_api_version</config_path>
+                        </field>
+                        
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/qris/merchant_key</config_path>
+                        </field>
+                        <field id="private_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Private Key</label>
+                            <comment>
+                                Merchant Generated Private Key Pair (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/qris/private_key</config_path>
+                        </field>
+                        <field id="public_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Public Key</label>
+                            <comment>
+                                Nicepay Public Key (SNAP Notification)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/qris/public_key</config_path>
+                        </field>
+                        <field id="client_secret" translate="label" type="obscure" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Client Secret</label>
+                            <comment>
+                                Merchant Client Secret (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/qris/client_secret</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/qris/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/qris/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/qris/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/qris/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- EWALLET -->
+                    <group id="ewallet" translate="label" sortOrder="93" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>E-Wallets</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/ewallet/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/ewallet/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/ewallet/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/ewallet/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/ewallet/nicepay_env</config_path>
+                        </field>
+                        <field id="nicepay_api_version" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>NICEPay API Version</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\ApiVersionRadioBtn</source_model>
+                            <comment>
+                                Choose Nicepay APi Version registered for your iMid
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/ewallet/nicepay_api_version</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/ewallet/merchant_key</config_path>
+                        </field>
+                        <field id="private_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Private Key</label>
+                            <comment>
+                                Merchant Generated Private Key Pair (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/ewallet/private_key</config_path>
+                        </field>
+                        <field id="public_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Public Key</label>
+                            <comment>
+                                Nicepay Public Key (SNAP Notification)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/ewallet/public_key</config_path>
+                        </field>
+                        <field id="client_secret" translate="label" type="obscure" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Client Secret</label>
+                            <comment>
+                                Merchant Client Secret (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/ewallet/client_secret</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/ewallet/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/ewallet/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/ewallet/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/ewallet/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- PAYOUT -->
+                    <group id="payout" translate="label" sortOrder="94" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payout / Disbursement</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payout/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/payout/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/payout/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/payout/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/payout/nicepay_env</config_path>
+                        </field>
+                        <field id="nicepay_api_version" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>NICEPay API Version</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\ApiVersionRadioBtn</source_model>
+                            <comment>
+                                Choose Nicepay APi Version registered for your iMid
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/payout/nicepay_api_version</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/payout/merchant_key</config_path>
+                        </field>
+                        <field id="private_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Private Key</label>
+                            <comment>
+                                Merchant Generated Private Key Pair (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/payout/private_key</config_path>
+                        </field>
+                        <field id="public_key" translate="label" type="obscure" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Public Key</label>
+                            <comment>
+                                Nicepay Public Key (SNAP Notification)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/payout/public_key</config_path>
+                        </field>
+                        <field id="client_secret" translate="label" type="obscure" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Client Secret</label>
+                            <comment>
+                                Merchant Client Secret (SNAP)
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/payout/client_secret</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payout/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payout/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/payout/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/payout/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- Card -->
+                    <group id="card" translate="label" sortOrder="94" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Debit / Credit Card</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/card/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/card/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/card/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/card/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/card/nicepay_env</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/card/merchant_key</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/card/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/card/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/card/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/card/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- Convenience Store -->
+                    <group id="cvs" translate="label" sortOrder="94" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Convenience Store</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/cvs/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/cvs/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/cvs/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/cvs/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/cvs/nicepay_env</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/cvs/merchant_key</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/cvs/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/cvs/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/cvs/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/cvs/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- Payloan -->
+                    <group id="payloan" translate="label" sortOrder="94" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Payloan</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payloan/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/payloan/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/payloan/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/payloan/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/payloan/nicepay_env</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/payloan/merchant_key</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payloan/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/payloan/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/payloan/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/payloan/max_amount</config_path>
+                        </field>
+                    </group>
+
+                    <!-- Redirect -->
+                    <group id="redirect" translate="label" sortOrder="94" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Redirect Nicepay Page</label>
+                        <field id="active" translate="label comment" sortOrder="1" type="select" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Enable</label>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/redirect/active</config_path>
+                        </field>
+                        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Title</label>
+                            <config_path>payment/redirect/title</config_path>
+                        </field>
+                        <field id="description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Description</label>
+                            <config_path>payment/redirect/description</config_path>
+                        </field>
+                        <field id="merchant_id" translate="label" type="textarea" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>iMid</label>
+                            <config_path>payment/redirect/merchant_id</config_path>
+                        </field>
+                        <field id="nicepay_env" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Transaction Environment</label>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EnvRadioBtn</source_model>
+                            <comment>
+                                Choose Live to perform real transaction
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <config_path>payment/redirect/nicepay_env</config_path>
+                        </field>
+                        <field id="merchant_key" translate="label" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Merchant Key</label>
+                            <comment>
+                                Merchant Key provided by Nicepay
+                            </comment>
+                            <attribute type="shared">1</attribute>
+                            <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                            <config_path>payment/redirect/merchant_key</config_path>
+                        </field>
+                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Min Amount Rule</label>
+                            <comment>
+                                Payment method only available when the minimum amount reach
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/redirect/use_min_amount</config_path>
+                        </field>
+                        <field id="use_max_amount" translate="label" sortOrder="24" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
+                            <label>Use Max Amount Rule</label>
+                            <comment>
+                                Payment method only available when amount not pass the maximum amount rule
+                            </comment>
+                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                            <config_path>payment/redirect/use_max_amount</config_path>
+                        </field>
+                        <field id="min_amount" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Min Amount</label>
+                            <comment>
+                                Minimum amount transaction
+                            </comment>
+                            <config_path>payment/redirect/min_amount</config_path>
+                        </field>
+                        <field id="max_amount" translate="label" type="text" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                            <label>Max Amount</label>
+                            <comment>
+                                Maximum amount transaction
+                            </comment>
+                            <config_path>payment/redirect/max_amount</config_path>
+                        </field>
+                    </group>
+                    
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
