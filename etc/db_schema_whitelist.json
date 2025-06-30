@@ -1,0 +1,16 @@
+{
+    "sales_order": {
+        "column": {
+            "nicepay_txid": true,
+            "nicepay_payment_method": true,
+            "nicepay_payment_status": true,
+            "nicepay_beneficiary_account_no": true
+        },
+        "index": {
+            "SALES_ORDER_NICEPAY_TXID": true,
+            "SALES_ORDER_NICEPAY_PAYMENT_METHOD": true,
+            "SALES_ORDER_NICEPAY_PAYMENT_STATUS": true,
+            "SALES_ORDER_NICEPAY_BENEFICIARY_ACCOUNT_NO": true
+        }
+    }
+}

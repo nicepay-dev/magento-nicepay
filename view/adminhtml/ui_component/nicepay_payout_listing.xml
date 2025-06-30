@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">nicepay_payout_listing.nicepay_payout_listing_data_source</item>
+            <item name="deps" xsi:type="string">nicepay_payout_listing.nicepay_payout_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">nicepay_payout_listing_columns</item>
+    </argument>
+
+    <settings>
+        <spinner>nicepay_payout_listing_columns</spinner>
+        <deps>
+            <dep>nicepay_payout_listing.nicepay_payout_listing_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="nicepay_payout_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+                <param name="pageSize" xsi:type="number">20</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <dataProvider class="Nicepay\NicePayment\Ui\DataProvider\Payout\ListingDataProvider" name="nicepay_payout_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    
+
+    <columns name="nicepay_payout_listing_columns">
+        <column name="increment_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Order #</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="created_at">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Created At</label>
+                <dataType>date</dataType>
+            </settings>
+        </column>
+        <column name="nicepay_txid">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">TX ID</label>
+            </settings>
+        </column>
+        <column name="nicepay_payment_method">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Payment Method</label>
+            </settings>
+        </column>
+        <column name="nicepay_payment_status">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Payment Status</label>
+            </settings>
+        </column>
+        <column name="grand_total">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Grand Total</label>
+                <dataType>price</dataType>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Nicepay\NicePayment\Ui\Component\Listing\Column\PayoutActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                </item>
+            </argument>
+        </actionsColumn>
+        
+    </columns>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+</listing>

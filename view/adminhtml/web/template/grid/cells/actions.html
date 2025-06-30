@@ -1,0 +1,34 @@
+<div class="admin__actions-wrap" data-bind="css: { '_active': _showMenu }">
+    <button
+        class="action-select"
+        data-bind="
+            click: _showMenu.bind($data, true),
+            attr: {
+                title: $col.getTitle(),
+                class: 'action-select admin__action-multiselect' + ($col.class() ? ' ' + $col.class() : '')
+            }"
+        type="button"
+    >
+        <span data-bind="text: $col.headerLabel"></span>
+    </button>
+    <ul
+        class="admin__action-multiselect-menu"
+        data-bind="foreach: { data: $col.getActionList($row()), as: 'action' }"
+    >
+        <li data-bind="visible: action.visible">
+            <a
+                data-bind="
+                    attr: {
+                        href: action.href ? action.href : '#',
+                        title: action.label,
+                        class: 'admin__action-multiselect-menu-item ' + (action.class ? action.class : '')
+                    },
+                    click: action.callback ? action.callback.bind($data, action, $row()) : $col.defaultCallback.bind($data, action, $row()),
+                    visible: action.visible,
+                    html: action.label"
+                target="_blank"
+            >
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <nicepay>
+                <title>NICEPay</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Nicepay</model>
+                <order_status>pending_payment</order_status>
+				<payment_status>processing_payment</payment_status>
+                <currency>IDR</currency>
+                <sort_order>1</sort_order>
+                <allowed_method>all</allowed_method>
+            </nicepay>
+            <virtual_account>
+                <title>Nicepay Virtual Account</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\VirtualAccount</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <nicepay_api_version>v2</nicepay_api_version>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <private_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>3</sort_order>
+                <description>Bayar melalui transfer bank dengan Nicepay Virtual Account</description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </virtual_account>
+            <qris>
+                <title>Nicepay Qris</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Qris</model>
+                <merchant_id/>
+                <nicepay_env>test</nicepay_env>
+                <nicepay_api_version>v2</nicepay_api_version>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <private_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <mitra_cd>qshp</mitra_cd>
+                <store_id/>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>9</sort_order>
+                <description>Scan pembayaran dengan Nicepay Qris</description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </qris>
+            <ewallet>
+                <title>Nicepay E-Wallet</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Ewallet</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <nicepay_api_version>v2</nicepay_api_version>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <private_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>6</sort_order>
+                <description>Bayar melalui Ewallet </description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </ewallet>
+            <payout>
+                <title>Nicepay Payout</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Payout</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <nicepay_api_version>v2</nicepay_api_version>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <public_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <private_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>8</sort_order>
+                <description>Request Cash Out / Refund / dll </description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </payout>
+            <card>
+                <title>Nicepay Credit Card</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Card</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>2</sort_order>
+                <description>Payment Dengan Debit / Credit Card </description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </card>
+            <cvs>
+                <title>Nicepay Convenience Store</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Cvs</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>4</sort_order>
+                <description>Bayar melalui mini market</description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </cvs>
+            <payloan>
+                <title>Nicepay Payloan</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Payloan</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>7</sort_order>
+                <description>Bayar melalui partner loan Nicepay</description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </payloan>
+            <redirect>
+                <title>Nicepay Payment</title>
+                <debug>0</debug>
+                <active>1</active>
+                <model>Nicepay\NicePayment\Model\Payment\Redirect</model>
+                <merchant_id/>
+                <nicepay_env>dev</nicepay_env>
+                <merchant_key  backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <currency>IDR</currency>
+                <is_gateway>1</is_gateway>
+                <can_initialize>1</can_initialize>
+                <can_use_checkout>1</can_use_checkout>
+                <sort_order>11</sort_order>
+                <description>Bayar di Nicepay Payment Page</description>
+                <payment_action>initialize</payment_action><!-- run a custom initialization flow -->
+                <use_min_amount>0</use_min_amount>
+                <use_max_amount>0</use_max_amount>
+                <min_amount>0</min_amount>
+                <max_amount>0</max_amount>
+            </redirect>
+        </payment>
+    </default>
+</config>

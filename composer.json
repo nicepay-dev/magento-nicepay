@@ -1,0 +1,34 @@
+{
+  "name": "nicepay/magento-nicepay",
+  "description": "Nicepay Magento 2 Payment Module",
+  "version": "1.0.0",
+  "require": {
+    "php": "~7.4.0||~8.1.0||~8.2.0||~8.3.0||~8.4.0",
+    "magento/module-sales": ">=102.0.3",
+    "magento/module-checkout": ">=100.3.3",
+    "magento/module-payment": ">=100.3.3",
+    "magento/framework": ">=102.0.3",
+    "magento/magento-composer-installer": "*",
+    "nicepay/php-nicepay": "^1.1"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    }
+  ],
+  "type": "magento2-module",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Nicepay\\NicePayment\\": "",
+      "Nicepay\\": "vendor/nicepay/php-nicepay/Nicepay/"
+    }
+  }
+}
