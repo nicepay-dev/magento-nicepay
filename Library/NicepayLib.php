@@ -18,9 +18,6 @@ use Nicepay\utils\Helper;
 use Nicepay\utils\NicepayCons;
 use Nicepay\NicePayment\Logger\Logger as NiceLogger;
 
-
-require_once __DIR__ . '/../vendor/nicepay/php-nicepay/autoload.php';
-
 class NicepayLib extends AbstractHelper
 {
     public $requestData = array();
