@@ -1516,6 +1516,10 @@ class NicepayLib extends AbstractHelper
                 'payment_url' => $response->getWebRedirectUrl(),
             ];
 
+            if ($data['mitra_cd'] == 'LINK') {
+                $data['payment_url'] = $data['payment_url'] . "?Message=" . $response->getAdditionalInfo()['redirectToken'];
+            }
+
             $this->niceLogger->info($this->logPrefix . 'handleResponseSnap Success Ewallet');
         } else if ($payMethod == '07' && $response->getResponseCode() == '2000000') {
 

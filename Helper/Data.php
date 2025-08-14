@@ -382,6 +382,42 @@ class Data extends AbstractHelper
     }
 
     /**
+     * @return mixed
+     */
+    public function getActiveBanks()
+    {
+        $banks = $this->scopeConfig->getValue(
+            'payment/virtual_account/active_banks',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        // For Magento 2.2+ with comma-separated values
+        if (is_string($banks) && !empty($banks)) {
+            return explode(',', $banks);
+        }
+
+        return [];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActiveMitra($code)
+    {
+        $mitras = $this->scopeConfig->getValue(
+            "payment/$code/active_mitra",
+            ScopeInterface::SCOPE_STORE
+        );
+
+        // For Magento 2.2+ with comma-separated values
+        if (is_string($mitras) && !empty($mitras)) {
+            return explode(',', $mitras);
+        }
+
+        return [];
+    }
+
+    /**
      * @param $code
      * @return mixed
      */

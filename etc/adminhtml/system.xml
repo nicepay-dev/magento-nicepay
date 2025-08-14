@@ -89,6 +89,12 @@
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/virtual_account/client_secret</config_path>
                         </field>
+                        <field id="active_banks" translate="label" type="multiselect" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Active Banks</label>
+                            <comment>Select 1 or more bank to display in customer checkout</comment>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\BankList</source_model>
+                            <config_path>payment/virtual_account/active_banks</config_path>
+                        </field>
                         <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
                             <label>Use Min Amount Rule</label>
                             <comment>
@@ -314,6 +320,12 @@
                             <attribute type="shared">1</attribute>
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/ewallet/client_secret</config_path>
+                        </field>
+                        <field id="active_mitra" translate="label" type="multiselect" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Active E-Wallet Mitra</label>
+                            <comment>Select 1 or more E-Wallet mitra to display in customer checkout</comment>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\EwalletMitraList</source_model>
+                            <config_path>payment/ewallet/active_mitra</config_path>
                         </field>
                          <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
                             <label>Use Min Amount Rule</label>
@@ -561,6 +573,12 @@
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/cvs/merchant_key</config_path>
                         </field>
+                        <field id="active_mitra" translate="label" type="multiselect" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Active Convenience Store Mitra</label>
+                            <comment>Select 1 or more Convenience Store mitra to display in customer checkout</comment>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\CvsMitraList</source_model>
+                            <config_path>payment/cvs/active_mitra</config_path>
+                        </field>
                          <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
                             <label>Use Min Amount Rule</label>
                             <comment>
@@ -630,6 +648,12 @@
                             <attribute type="shared">1</attribute>
                             <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                             <config_path>payment/payloan/merchant_key</config_path>
+                        </field>
+                        <field id="active_mitra" translate="label" type="multiselect" sortOrder="27" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Active Payloan Mitra</label>
+                            <comment>Select 1 or more Payloan mitra to display in customer checkout</comment>
+                            <source_model>Nicepay\NicePayment\Model\Adminhtml\Source\PayloanMitraList</source_model>
+                            <config_path>payment/payloan/active_mitra</config_path>
                         </field>
                          <field id="use_min_amount" translate="label" sortOrder="23" type="select" showInDefault="1" showInWebsite="1" showInStore="1" >
                             <label>Use Min Amount Rule</label>
