@@ -82,7 +82,7 @@ class ConfigProvider implements ConfigProviderInterface
 		];
 	}
 
-	public function convenienceStoreList($mitraCd = null)
+	public static function convenienceStoreList($mitraCd = null)
 	{
 		$mitra = [
 			'ALMA' => [
@@ -132,20 +132,56 @@ class ConfigProvider implements ConfigProviderInterface
 		return $mitra;
 	}
 
-	public function payloanMitraList($mitraCd = null)
+	public static function payloanMitraList($mitraCd = null)
 	{
 		$mitra = [
 			'AKLP' => [
 				'label' => __('AKULAKU'),
-				'content' => ''
+				'content' => '<strong>AKULAKU Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih Pembayaran melalui Akulaku</li>
+                <li>Anda akan dipindahkan ke Halaman Pembayaran Akulaku</li>
+                <li>Masuk menggunakan akun dan OTP</li>
+                <li>Pastikan Credit Limit anda cukup</li>
+                <li>Lanjut dan Konfirmasi</li>
+                <li>Pembayaranmu sudah Berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Pastikan aplikasi Akulaku sudah terinstall di perangkat Anda</small>'
 			],
 			'KDVI' => [
 				'label' => __('KREDIVO'),
-				'content' => ''
+				'content' => '<strong>KREDIVO Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih Pembayaran melalui Kredivo</li>
+                <li>Anda akan dipindahkan ke Halaman Pembayaran Kredivo</li>
+                <li>Masuk menggunakan akun dan OTP</li>
+                <li>Pastikan Credit Limit anda cukup</li>
+                <li>Lanjut dan Konfirmasi</li>
+                <li>Pembayaranmu sudah Berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Tenor pembayaran akan ditampilkan di aplikasi Kredivo</small>'
 			],
 			'IDNA' => [
 				'label' => __('INDODANA'),
-				'content' => ''
+				'content' => '<strong>INDODANA Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pengguna memilih pembayaran dengan Indodana</li>
+                <li>Pengguna akan diarahkan ke halaman Indodana</li>
+                <li>Masukkan nomor handphone</li>
+                <li>Masukkan PIN</li>
+                <li>Tekan tombol Bayar pada halaman rincian transaksi</li>
+                <li>Tekan tombol Saya Setuju pada pop-up Perjanjian Peminjaman</li>
+                <li>Masukkan PIN</li>
+                <li>Muncul halaman transaksi berhasil</li>
+                <li>Tekan tombol Kembali ke Merchant untuk kembali ke halaman NICEPAY</li>
+            </ul>
+            </div>
+            <small>*Pastikan akun Indodana Paylater Anda aktif</small>'
 			]
 		];
 
@@ -155,7 +191,274 @@ class ConfigProvider implements ConfigProviderInterface
 
 		return $mitra;
 	}
-	public function bankList($bankcd = null)
+
+	public static function generalPaymentGuide($payMethod, $code = null)
+	{
+
+		$paymentGuide = [
+			'01' => self::generalCCGuide(),
+			'02' => self::bankList($code),
+			'03' => self::convenienceStoreList($code),
+			'04' => self::generalDirectDebitGuide(),
+			'05' => self::ewalletMitraList($code),
+			'06' => self::payloanMitraList($code),
+			'07' => self::payoutBankList($code),
+			'08' => self::generalQrisGuide(),
+			'09' => self::generalGPNGuide(),
+			'00' => self::generalRedirectGuide()
+		];
+
+		if ($payMethod !== null) {
+			return $paymentGuide[$payMethod] ?? null;
+		}
+
+		return $paymentGuide;
+	}
+
+	public static function paymentMethodList($code = null)
+	{
+		$methodMap = [
+			'01' => 'Credit Card',
+			'02' => 'Virtual Account',
+			'03' => 'Convenience Store',
+			'04' => 'Direct Debit',
+			'05' => 'E-Wallet',
+			'06' => 'Paylater',
+			'07' => 'Payout',
+			'08' => 'QRIS',
+			'09' => 'GPN Card',
+			'00' => 'Nicepay Payment Page'
+		];
+
+		if ($code !== null) {
+			return $methodMap[$code] ?? null;
+		}
+
+		return $methodMap;
+	}
+
+	public static function generalRedirectGuide()
+	{
+
+		return [
+			'label' => __('Nicepay Payment Page'),
+			'content' =>  '<div style="border:1px solid #e0e0e0; padding:20px; border-radius:8px; background:#f9f9f9;">
+							<h3 style="margin-top:0; color:#1979c3;">Proses Pembayaran Melalui Halaman Nicepay</h3>
+							
+							<div style="display:flex; margin-bottom:15px;">
+								<div style="background:#1979c3; color:white; border-radius:50%; width:24px; height:24px; text-align:center; line-height:24px; margin-right:10px;">1</div>
+								<div style="flex:1;">
+									<strong>Anda akan diarahkan ke halaman pembayaran Nicepay</strong>
+									<p style="margin:5px 0 0; color:#555; font-size:14px;">Sistem sedang mempersiapkan halaman pembayaran...</p>
+								</div>
+							</div>
+							
+							<div style="display:flex; margin-bottom:15px;">
+								<div style="background:#1979c3; color:white; border-radius:50%; width:24px; height:24px; text-align:center; line-height:24px; margin-right:10px;">2</div>
+								<div style="flex:1;">
+									<strong>Pilih metode pembayaran</strong>
+									<p style="margin:5px 0 0; color:#555; font-size:14px;">(Transfer Bank, Kartu Kredit, E-Wallet, dll)</p>
+								</div>
+							</div>
+							
+							<div style="display:flex; margin-bottom:15px;">
+								<div style="background:#1979c3; color:white; border-radius:50%; width:24px; height:24px; text-align:center; line-height:24px; margin-right:10px;">3</div>
+								<div style="flex:1;">
+									<strong>Lengkapi data pembayaran</strong>
+									<p style="margin:5px 0 0; color:#555; font-size:14px;">Isi informasi yang diperlukan sesuai metode pembayaran</p>
+								</div>
+							</div>
+							
+							<div style="display:flex; margin-bottom:15px;">
+								<div style="background:#1979c3; color:white; border-radius:50%; width:24px; height:24px; text-align:center; line-height:24px; margin-right:10px;">4</div>
+								<div style="flex:1;">
+									<strong>Selesaikan pembayaran</strong>
+									<p style="margin:5px 0 0; color:#555; font-size:14px;">Ikuti petunjuk terakhir di halaman pembayaran</p>
+								</div>
+							</div>
+							
+							<div style="display:flex;">
+								<div style="background:#4caf50; color:white; border-radius:50%; width:24px; height:24px; text-align:center; line-height:24px; margin-right:10px;">✓</div>
+								<div style="flex:1;">
+									<strong>Pembayaran berhasil!</strong>
+									<p style="margin:5px 0 0; color:#555; font-size:14px;">Anda akan kembali otomatis ke halaman konfirmasi merchant</p>
+								</div>
+							</div>
+							
+							<div style="margin-top:20px; padding:12px; background:#e8f5e9; border-left:4px solid #4caf50; border-radius:0 4px 4px 0;">
+								<strong style="color:#2e7d32;">Perhatian:</strong>
+								<ul style="margin:8px 0 0 20px; padding-left:0; color:#555; font-size:13px;">
+									<li>Jangan tutup browser selama proses pembayaran</li>
+									<li>Proses otomatis memakan waktu 5-10 detik setelah pembayaran</li>
+									<li>Hubungi merchant jika tidak kembali otomatis</li>
+								</ul>
+							</div>
+						</div>'
+		];
+	}
+
+
+	public static function generalGPNGuide()
+	{
+
+		return [
+			'label' => __('GPN'),
+			'content' =>  '<strong>GPN Payment Steps</strong>
+							<div style="border:1px solid #e0e0e0; padding:12px 20px 5px; margin-bottom:15px; border-radius:6px; background:#fafafa;">
+							<ul style="list-style-type: none; padding-left:0; margin:0;">
+								<li style="padding:8px 0; border-bottom:1px dashed #eee; display:flex;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">1</span>
+									Pilih Pembayaran melalui <strong>GPN</strong>
+								</li>
+								<li style="padding:8px 0; border-bottom:1px dashed #eee; display:flex;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">2</span>
+									Pilih bank penerbit kartu GPN Anda
+								</li>
+								<li style="padding:8px 0; border-bottom:1px dashed #eee; display:flex; flex-wrap:wrap;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">3</span>
+									<div>
+										Masukkan detail kartu:
+										<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px; margin:8px 0 0 25px; padding:10px; background:#fff; border-radius:4px; border:1px solid #eee;">
+											<div>
+												<div style="font-size:11px; color:#666;">Nomor Kartu</div>
+												<div style="height:32px; background:#f5f5f5; border-radius:3px;"></div>
+											</div>
+											<div>
+												<div style="font-size:11px; color:#666;">MM/YY</div>
+												<div style="height:32px; background:#f5f5f5; border-radius:3px;"></div>
+											</div>
+											<div>
+												<div style="font-size:11px; color:#666;">CVV</div>
+												<div style="height:32px; background:#f5f5f5; border-radius:3px;"></div>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li style="padding:8px 0; border-bottom:1px dashed #eee; display:flex;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">4</span>
+									Klik <strong style="color:#1979c3;">Konfirmasi</strong>
+								</li>
+								<li style="padding:8px 0; border-bottom:1px dashed #eee; display:flex;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">5</span>
+									Masukkan <strong>kode OTP</strong> dari SMS bank
+								</li>
+								<li style="padding:8px 0; display:flex;">
+									<span style="color:#1979c3; font-weight:bold; min-width:25px;">6</span>
+									Transaksi berhasil! Bukti pembayaran akan ditampilkan
+								</li>
+							</ul>
+							</div>
+
+							<div style="background:#fff8e1; border-left:4px solid #ffb300; padding:12px 15px; margin:15px 0; border-radius:0 4px 4px 0;">
+								<div style="display:flex; align-items:center; margin-bottom:5px;">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="#ff6f00" style="margin-right:8px;">
+										<path d="M11 15h2v2h-2zm0-8h2v6h-2zm1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+									</svg>
+									<strong style="color:#e65100;">Keamanan Kartu GPN:</strong>
+								</div>
+								<ul style="margin:5px 0 0 20px; padding-left:0; font-size:13px;">
+									<li>Pastikan transaksi dilakukan di website resmi merchant</li>
+									<li>Jangan bagikan kode OTP ke siapapun</li>
+									<li>Logo GPN garansi keamanan transaksi</li>
+								</ul>
+							</div>
+
+							<div style="margin-top:15px; text-align:center;">
+								<img src="https://www.gpnindonesia.com/assets/img/logo-gpn.png" alt="Logo GPN" style="height:30px; opacity:0.8;">
+								<p style="font-size:12px; color:#666; margin:5px 0 0;">Gerakan Pembayaran Nasional - Transaksi lebih cepat dan aman</p>
+							</div>'
+		];
+	}
+
+	public static function generalQrisGuide()
+	{
+
+		return [
+			'label' => __('QRIS'),
+			'content' =>  '<strong>QRIS Payment Steps</strong>
+							<div style="border:1px solid #cccccc; padding:10px 20px 0; margin-bottom:15px; border-radius:4px;">
+							<ul style="list-style-type: disc; padding-left:20px;">
+								<li><strong>Buka aplikasi</strong> yang mendukung QRIS (E-Wallet, Mobile Banking, etc)</li>
+								<li>Pilih menu <strong>QRIS / Pay / Bayar</strong></li>
+								<li style="position:relative;">
+									<strong>Pindai kode QR</strong> merchant
+									<div style="background:#f5f5f5; padding:8px; margin:5px 0; border-radius:4px; display:inline-block;">
+										<small>Pastikan kode terlihat jelas di kamera</small>
+									</div>
+								</li>
+								<li>Verifikasi <strong>nominal pembayaran</strong></li>
+								<li>Tekan <strong style="color:#1979c3;">Konfirmasi</strong></li>
+								<li>Masukkan <strong>PIN/OTP</strong> aplikasi</li>
+								<li>Pembayaran berhasil! Sistem akan mengalihkan Anda otomatis</li>
+							</ul>
+							</div>
+							'
+		];
+	}
+
+	public static function generalDirectDebitGuide()
+	{
+		return [
+			'label' => __('Direct Debit'),
+			'content' =>  '<strong>Jenius Pay Payment Steps</strong>
+							<div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+							<ul style="list-style-type: disc; padding-left:20px;">
+								<li>Pilih Pembayaran melalui Jenius Pay</li>
+								<li>Masukkan <strong>cashtag</strong> atau <strong>Nama Akun Unik</strong> Jenius Pay Anda, lalu klik konfirmasi</li>
+								<li>Notifikasi dari Jenius Pay akan muncul di aplikasi</li>
+								<li>Buka notifikasi tagihan di aplikasi Jenius Pay</li>
+								<li>Login menggunakan kredensial Anda</li>
+								<li>Cari tagihan yang ingin dibayarkan di notifikasi</li>
+								<li>Verifikasi detail tagihan</li>
+								<li>Klik <strong style="color:#1979c3;">Bayar</strong></li>
+								<li>Transaksi selesai</li>
+							</ul>
+							</div>
+							<div style="background:#e8f5e9; border-left:4px solid #4caf50; padding:10px 15px; margin:10px 0;">
+								<strong style="color:#2e7d32;">Tips Cepat:</strong>
+								<ul style="margin:5px 0 0 20px; padding-left:0;">
+									<li>Pastikan aplikasi Jenius sudah diperbarui</li>
+									<li>Aktifkan notifikasi push untuk Jenius Pay</li>
+									<li>Cashtag biasanya berupa <code>@namapengguna</code></li>
+								</ul>
+							</div>
+							<small>*Transaksi akan otomatis dibatalkan jika tidak dibayar dalam 24 jam</small>'
+		];
+	}
+
+	public static function generalCCGuide()
+	{
+		return [
+			'label' => __('Credit Card'),
+			'content' =>  '<strong>Credit Card Payment Steps</strong>
+					<div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+					<ul style="list-style-type: disc; padding-left:20px;">
+						<li>Pilih Pembayaran melalui Kartu Kredit</li>
+						<li>Dialihkan menuju Halaman Pembayaran Kartu Kredit</li>
+						<li>Masukkan informasi kartu:
+							<ul style="list-style-type: circle; padding-left:25px; margin:5px 0;">
+								<li>Nomor kartu</li>
+								<li>Expired date (MM/YY)</li>
+								<li>CVV (3 digit angka di belakang kartu)</li>
+							</ul>
+						</li>
+						<li>Klik Konfirmasi</li>
+						<li>Masukkan kode OTP yang dikirimkan ke nomor Anda</li>
+						<li>Klik pilihan Konfirmasi</li>
+						<li>Merchant akan memberikan bukti pembayaran</li>
+					</ul>
+					</div>
+					<div style="background:#fff8e1; border-left:4px solid #ffc107; padding:10px 15px; margin:10px 0;">
+						<strong style="color:#d32f2f;">Perhatian:</strong>
+						<ul style="margin:5px 0 0 20px; padding-left:0;">
+							<li>Pastikan kartu kredit Anda aktif dan memiliki limit yang cukup</li>
+							<li>Biaya transaksi akan dikonversi sesuai kurs bank penerbit kartu</li>
+						</ul>
+					</div>'
+		];
+	}
+
+	public static function bankList($bankcd = null)
 	{
 		$allBanks = [
 			'BMRI' => [
@@ -857,25 +1160,71 @@ class ConfigProvider implements ConfigProviderInterface
 
 
 
-	public function ewalletMitraList($mitraCd = null)
+	public static function ewalletMitraList($mitraCd = null)
 	{
 		$mitra = [
 			'DANA' => [
 				'label' => __('DANA'),
-				'content' => ''
+				'content' => '<strong>DANA Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih pembayaran melalui DANA dan input Nomor Seluler anda yang terdaftar</li>
+                <li>Anda akan dipindahkan ke Halaman Pembayaran DANA</li>
+                <li>Masuk menggunakan akun anda</li>
+                <li>Pastikan Saldo anda cukup</li>
+                <li>Klik Pay, Bayar atau Confirm</li>
+                <li>Pembayaranmu berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Pastikan aplikasi DANA sudah terinstall di perangkat Anda</small>'
 			],
 			'OVOE' => [
 				'label' => __('OVO'),
-				'content' => ''
+				'content' => '<strong>OVO Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih Pembayaran melalui OVO dan Input Nomor OVO Anda</li>
+                <li>Notifikasi pembayaran akan dikirimkan ke Aplikasi OVO Anda</li>
+                <li>Buka dan Login pada aplikasi OVO</li>
+                <li>Pastikan Saldo OVO Anda mencukupi</li>
+                <li>Jika tidak mendapatkan Notifikasi, check Icon Lonceng di aplikasi</li>
+                <li>Klik Pay, Bayar or Confirm</li>
+                <li>Pembayaranmu berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Pastikan aplikasi OVO sudah terinstall dan aktif</small>'
 			],
 			'ESHP' => [
 				'label' => __('ShopeePay'),
-				'content' => ''
+				'content' => '<strong>ShopeePay Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih pembayaran melalui ShopeePay</li>
+                <li>Aplikasi akan Jump App ke ShopeePay</li>
+                <li>Detail pembayaran akan ditampilkan</li>
+                <li>Pastikan Saldo Anda cukup</li>
+                <li>Klik "Bayar Sekarang" dan masukan pin ShopeePay</li>
+                <li>Pembayaranmu berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Hanya tersedia untuk pengguna ShopeePay</small>'
 			],
 			'LINK' => [
 				'label' => __('LinkAja'),
-				'content' => ''
-			]
+				'content' => '<strong>LinkAja Payment Steps</strong>
+            <div style="border:1px solid #cccccc;padding:10px 20px 0;margin-bottom:15px;">
+            <ul style="list-style-type: disc; padding-left:20px;">
+                <li>Pilih pembayaran melalui LinkAja</li>
+                <li>Input Nomor Seluler anda yang terdaftar</li>
+                <li>Anda akan dipindahkan ke Halaman Pembayaran LinkAja</li>
+                <li>Masuk menggunakan akun anda</li>
+                <li>Pastikan Saldo anda cukup</li>
+                <li>Klik Pay, Bayar atau Confirm</li>
+                <li>Pembayaranmu berhasil! Anda akan dipindahkan ke result page</li>
+            </ul>
+            </div>
+            <small>*Pastikan akun LinkAja Anda sudah terverifikasi</small>'
+			],
 		];
 
 

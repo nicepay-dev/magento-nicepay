@@ -65,17 +65,17 @@ $convenienceStoreList = $block->getConvenienceStoreList();
                         <div class="detail-row">
                             <span class="detail-label">Mitra:</span>
                             <span class="detail-value">
-                                <?php if (isset($data['mitra_code']) && isset($convenienceStoreList[$data['mitra_code']])): ?>
-                                    <?= $convenienceStoreList[$data['mitra_code']]['label'] ?>
+                                <?php if (isset($data['mitra_cd']) && isset($convenienceStoreList[$data['mitra_cd']])): ?>
+                                    <?= $convenienceStoreList[$data['mitra_cd']]['label'] ?>
                                 <?php else: ?>
-                                    <?= $block->escapeHtml($data['mitra_code'] ?? 'N/A') ?>
+                                    <?= $block->escapeHtml($data['mitra_cd'] ?? 'N/A') ?>
                                 <?php endif; ?>
                             </span>
                         </div>
-                        <?php if (isset($data['mitra_code']) && isset($convenienceStoreList[$data['mitra_code']]) && !empty($convenienceStoreList[$data['mitra_code']]['content'])): ?>
+                        <?php if (isset($data['mitra_cd']) && isset($convenienceStoreList[$data['mitra_cd']]) && !empty($convenienceStoreList[$data['mitra_cd']]['content'])): ?>
                             <div class="payment-instructions">
                                 <h5>How to Pay</h5>
-                                <?= /* @noEscape */ $convenienceStoreList[$data['mitra_code']]['content'] ?>
+                                <?= /* @noEscape */ $convenienceStoreList[$data['mitra_cd']]['content'] ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -87,9 +87,19 @@ $convenienceStoreList = $block->getConvenienceStoreList();
                         <p class="qr-instruction">Scan the QR code below to complete your payment</p>
                         <?php if (isset($data['qris_url'])): ?>
                             <div class="qr-code-container">
-                                <img src="<?= $block->escapeHtml($data['qris_url']) ?>" alt="QR Code" class="qr-code">
+                                <img
+                                    src="<?= $block->escapeHtml($data['qris_url']) ?>"
+                                    alt="QR Code"
+                                    class="qr-code"
+                                    <?php if (isset($data['alt_qris_url'])): ?>
+                                    onerror="this.onerror=null; this.src='<?= $block->escapeHtml($data['alt_qris_url']) ?>';"
+                                    <?php endif; ?>>
                             </div>
                         <?php endif; ?>
+                        <div class="payment-instructions">
+                            <h5>How to Pay</h5>
+                            <?= /* @noEscape */ $block->getGeneralPaymentGuide($data['payment_method'])['content'] ?>
+                        </div>
                     </div>
 
                     <!-- For Ewallet -->

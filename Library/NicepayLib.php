@@ -173,7 +173,7 @@ class NicepayLib extends AbstractHelper
             return $this->registV2Payout();
         } else if ($payMethod == '08') {
             $this->niceLogger->info($this->logPrefix . 'Call Regist V2 Qris ');
-            return $this->registV2VQris();
+            return $this->registV2Qris();
         }
 
         return null;
@@ -965,7 +965,7 @@ class NicepayLib extends AbstractHelper
             ->partnerReferenceNo($reffNo)
             ->amount($this->get('amt') . '.00', $this->get('currency'))
             ->merchantId($iMid)
-            ->storeId($storeId)
+            ->storeId($storeId ?? '')
             ->validityPeriod(Helper::getCustomTimeStamp('Y-m-d\TH:i:sP', 15))
             ->additionalInfo(
                 $this->get('goodsNm'),
@@ -1296,7 +1296,7 @@ class NicepayLib extends AbstractHelper
         }
     }
 
-    public function registV2VQris()
+    public function registV2Qris()
     {
 
         $this->niceLogger->info($this->logPrefix . 'registV2VQris ');
@@ -1331,7 +1331,7 @@ class NicepayLib extends AbstractHelper
             ->setPaymentExpDt("")
             ->setPaymentExpTm("")
             ->setUserIP($this->get('userIP'))
-            ->setShopId($storeId)
+            ->setShopId($storeId ??  "")
             ->setMitraCd($mitraCd)
             ->build();
 
@@ -1339,7 +1339,7 @@ class NicepayLib extends AbstractHelper
         $v2QrisService = new V2QrisService($this->nicepayConfig);
 
         try {
-            $this->niceLogger->info($this->logPrefix . 'registSnapVirtualAccount request :', ['requestBody' => $parameter->toArrayV2()]);
+            $this->niceLogger->info($this->logPrefix . 'registV2VQris request :', ['requestBody' => $parameter->toArrayV2()]);
             $response = $v2QrisService->registration($parameter);
             $this->niceLogger->info($this->logPrefix . 'regist success call handle response ');
 
@@ -1628,7 +1628,7 @@ class NicepayLib extends AbstractHelper
 
                 $additionalData = [
                     'cvs_pay_no' => $response->getPayNo(),
-                    'mitra_code' => $response->getMitraCd(),
+                    'mitra_cd' => $response->getMitraCd(),
                     'paymentExp' => DateHelper::formatTimestampToStringDateTime($response->getPayValidDt() . $response->getPayValidTm()),
                 ];
 

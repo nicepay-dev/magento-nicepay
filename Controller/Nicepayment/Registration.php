@@ -26,6 +26,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\UrlInterface;
 use Nicepay\NicePayment\Helper\CommonHelper;
 use Magento\Framework\Registry;
+use Nicepay\NicePayment\Model\Ui\ConfigProvider;
 
 
 class Registration extends AbstractAction
@@ -447,69 +448,78 @@ class Registration extends AbstractAction
 
             if ($order->getState() === Order::STATE_NEW) {
                 $niceLogger->info($this->logPrefix . 'Update Order Status to Pending');
-                // update from new > pending 
-                $this->updatePaymentStatusToPending($order);
 
                 $niceLogger->info($this->logPrefix . 'Payment registration to Nicepay');
                 $nicepayResponse = $nicepay->nicepayRegistration();
 
 
+                if ($nicepayResponse['status_code'] == '00000' || strpos($nicepayResponse['status_code'], '200') === 0) {
 
-                if ($payMethod == '07') {
-                    $beneficiaryAccountNo = $this->getRequest()->getParam('accountNo');
-                    $nicepayResponse['beneficiary_account_no'] = $beneficiaryAccountNo;
-                }
+                    if ($payMethod == '07') {
+                        $beneficiaryAccountNo = $this->getRequest()->getParam('accountNo');
+                        $nicepayResponse['beneficiary_account_no'] = $beneficiaryAccountNo;
+                    }
 
-                if (isset($nicepayResponse['tXid'])) {
+                    // update from new > pending 
+                    $this->updatePaymentStatusToPending($order);
+
+                    // Update tXid
                     $niceLogger->info($this->logPrefix . 'Update order with registered tXid');
-
                     $this->updateTXidOrder($order, $nicepayResponse);
-                }
-
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-
-                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
 
 
-                // Build the URL with query params
-                $url = $this->_url->getUrl('nicepay/nicepayment/success', ['_query' => $nicepayResponse]);
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
 
-                $resultRedirect->setUrl($url);
+                    // Prepare result redirect
+                    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                    // Build the URL with query params
+                    $url = $this->_url->getUrl('nicepay/nicepayment/success', ['_query' => $nicepayResponse]);
+                    $resultRedirect->setUrl($url);
 
 
-                if (($nicepayResponse['status_code'] == '00000' || strpos($nicepayResponse['status_code'], '200') === 0) &&
-                    ($payMethod == '00' || $payMethod == '01' || $payMethod == '05' || $payMethod == '06')
-                ) {
-                    $niceLogger->info($this->logPrefix . 'Redirect to external payment page', ['payment_url' => $nicepayResponse['payment_url']]);
+                    // Send Email Notification
+                    $this->sendPaymentEmail($order, $nicepayResponse);
 
-                    $mitraMessages = [
-                        'OVOE' => 'Check your OVO Application for Notification.',
-                        'LINK' => 'Redirecting to LinkAja...',
-                        'DANA' => 'Redirecting to DANA...',
-                        'ESHP' => 'Redirecting to ShopeePay...',
-                        'IDNA' => 'Redirecting to Indodana...',
-                        'KDVI' => 'Redirecting to Kredivo...',
-                        'AKLP' => 'Redirecting to Akulaku...'
-                    ];
+                    if ($payMethod == '00' || $payMethod == '01' || $payMethod == '05' || $payMethod == '06') {
+                        $niceLogger->info($this->logPrefix . 'Redirect to external payment page', ['payment_url' => $nicepayResponse['payment_url']]);
 
-                    $defaultMessage = 'You will be redirected to complete your payment.';
-                    $alertMessage = $mitraMessages[$nicepayResponse['mitra_cd'] ?? ''] ?? $defaultMessage;
+                        $mitraMessages = [
+                            'OVOE' => 'Check your OVO Application for Notification.',
+                            'LINK' => 'Redirecting to LinkAja...',
+                            'DANA' => 'Redirecting to DANA...',
+                            'ESHP' => 'Redirecting to ShopeePay...',
+                            'IDNA' => 'Redirecting to Indodana...',
+                            'KDVI' => 'Redirecting to Kredivo...',
+                            'AKLP' => 'Redirecting to Akulaku...'
+                        ];
 
-                    $this->getResponse()->setBody(
-                        "<script>
+                        $defaultMessage = 'You will be redirected to complete your payment.';
+                        $alertMessage = $mitraMessages[$nicepayResponse['mitra_cd'] ?? ''] ?? $defaultMessage;
+
+                        $this->getResponse()->setBody(
+                            "<script>
                             if (confirm('" . addslashes($alertMessage) . "\\n\\nClick OK to continue.')) {
                                 window.location.href = '" . $nicepayResponse['payment_url'] . "';
                             } else {
                                 window.location.href = '" . $this->_url->getUrl('checkout/cart') . "';
                             }
                         </script>"
-                    );
-                    return;
+                        );
+                        return;
+                    }
+                    return $resultRedirect;
+                } else {
+
+                    // Nicepay registration failed - cancel order
+                    $niceLogger->error($this->logPrefix . 'Nicepay registration failed', $nicepayResponse);
+                    $this->cancelOrder($order, $nicepayResponse['status']);
+
+                    return $this->redirectToCart($nicepayResponse['status']);
                 }
 
-                return $resultRedirect;
+                // return $resultRedirect;
             } elseif ($order->getState() === Order::STATE_CANCELED) {
                 $niceLogger->error($this->logPrefix . 'Order is already canceled', ['order_id' => $order->getIncrementId()]);
                 return $this->_redirect('checkout/cart');
@@ -534,6 +544,92 @@ class Registration extends AbstractAction
             }
 
             return $this->redirectToCart($e->getMessage());
+        }
+    }
+
+    private function updateEmailVariables($extVariable)
+    {
+        $paymentMethod = $extVariable['payment_method'];
+        $extVariable['payment_method'] = ConfigProvider::paymentMethodList($paymentMethod);
+
+        $bankCode  = $extVariable['bank_code'] ?? null;
+        $mitraCode = $extVariable['mitra_cd'] ?? null;
+
+        if ($bankCode) {
+            $bankData = ConfigProvider::generalPaymentGuide($paymentMethod, $bankCode);
+            $extVariable['bank_code'] = (string) $bankData['label'];
+            $extVariable['message']   = $bankData['content'];
+            return $extVariable;
+        }
+
+        if ($mitraCode) {
+            $mitraData = ConfigProvider::generalPaymentGuide($paymentMethod, $mitraCode);
+            $extVariable['mitra_cd'] = (string) $mitraData['label'];
+            $extVariable['message']    = $mitraData['content'];
+            return $extVariable;
+        }
+
+        $guideData = ConfigProvider::generalPaymentGuide($paymentMethod);
+        if ($guideData) {
+            $extVariable['message'] = $guideData['content'];
+        }
+
+        return $extVariable;
+    }
+
+
+    private function sendPaymentEmail($order, $extVariable)
+    {
+        try {
+            // Update Variables from response 
+            $extVariable = $this->updateEmailVariables($extVariable);
+
+            // This is the template name from your etc/config.xml 
+            $template_id = 'payment_email';
+
+            $customerId = $order->getCustomerId();
+            $billing = $order->getBillingAddress();
+
+            $billingNm = $billing['firstname'] . " " . $billing['middlename'] . " " . $billing['lastname'];
+            $billingEmail = $billing['email'];
+
+            // Who were sending to...
+            $receiveEmail = $billingEmail;
+            $receiveName   = $billingNm;
+
+            $om = \Magento\Framework\App\ObjectManager::getInstance();
+
+            $_transportBuilder = $om->get('Magento\Framework\Mail\Template\TransportBuilder');
+            $inlineTranslation = $om->get('Magento\Framework\Translate\Inline\StateInterface');
+            $scopeConfig = $om->get('Magento\Framework\App\Config\ScopeConfigInterface');
+            $storeManager = $om->get('Magento\Store\Model\StoreManagerInterface');
+
+            $sender_email = $scopeConfig->getValue('trans_email/ident_support/email', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $sender_name  = $scopeConfig->getValue('trans_email/ident_support/name', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
+            $templateOptions = array('area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeManager->getStore()->getId());
+            $templateVars = array(
+                'store' => $storeManager->getStore(),
+                'customer_name' => $receiveName,
+            );
+
+            if (is_array($extVariable)) {
+                $templateVars = array_merge($templateVars, $extVariable);
+            }
+
+            $from = array('email' => $sender_email, 'name' => $sender_name);
+            $inlineTranslation->suspend();
+            //$to = array(, );
+            $transport = $_transportBuilder->setTemplateIdentifier($template_id)
+                ->setTemplateOptions($templateOptions)
+                ->setTemplateVars($templateVars)
+                ->setFrom($from)
+                ->addTo($receiveEmail, $receiveName)
+                ->getTransport();
+            $transport->sendMessage();
+            $inlineTranslation->resume();
+        } catch (\Exception $e) {
+            $this->getLogger()->error($this->logPrefix . 'Send payment email failed: ' . $e->getMessage(), ['order_id' => $order->getIncrementId()]);
         }
     }
 
@@ -723,6 +819,7 @@ class Registration extends AbstractAction
 
     private function redirectToCart($failureReason)
     {
+        // $this->messageManager->addErrorMessage(__('Nicepay registration with order %1 failed with message %2. try other payment method or contact Customer Support. ', $order->getIncrementId(), $nicepayResponse['status']));
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setUrl($this->_url->getUrl('checkout/cart'), ['_secure' => false]);
         return $resultRedirect;

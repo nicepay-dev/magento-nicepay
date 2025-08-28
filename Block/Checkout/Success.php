@@ -52,4 +52,9 @@ class Success extends Template
     {
         return $this->configProvider->convenienceStoreList();
     }
+
+    public function getGeneralPaymentGuide($payMethod, $code = null)
+    {
+        return $this->configProvider->generalPaymentGuide($payMethod, $code);
+    }
 }
